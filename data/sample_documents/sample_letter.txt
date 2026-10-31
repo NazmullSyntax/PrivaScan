@@ -1,0 +1,12 @@
+ACME Corporation - Employment Verification
+
+Employee: Alice Testerson
+Email: alice.testerson@example.com
+Phone: +1-555-010-2030
+SSN (sample format): 123-45-6789
+Passport (sample format): AB1234567
+Bank account: 1234567890123
+Address: 742 Evergreen Avenue
+
+Alice has been with the company since 2020 and works as a Data Analyst.
+This is synthetic data used only for testing.

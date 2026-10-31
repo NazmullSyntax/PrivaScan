@@ -1,19 +1,12 @@
-"""
-Generate synthetic test files in data/sample_documents/.
-
-Run once:  python scripts/make_test_files.py
-NEVER put real personal information in this project's test data.
-"""
+﻿"""Generate synthetic test files in data/sample_documents/."""
 from pathlib import Path
-
 import fitz
 from docx import Document
 
 OUT = Path(__file__).resolve().parent.parent / "data" / "sample_documents"
 OUT.mkdir(parents=True, exist_ok=True)
 
-# ---- A small fake business letter as TXT -----------------------------
-TXT_BODY = """ACME Corporation — Employment Verification
+TXT_BODY = """ACME Corporation - Employment Verification
 
 Employee: Alice Testerson
 Email: alice.testerson@example.com
@@ -26,11 +19,13 @@ Address: 742 Evergreen Avenue
 Alice has been with the company since 2020 and works as a Data Analyst.
 This is synthetic data used only for testing.
 """
+
+# TXT
 (OUT / "sample_letter.txt").write_text(TXT_BODY, encoding="utf-8")
 
-# ---- Same letter as DOCX ---------------------------------------------
+# DOCX
 doc = Document()
-doc.add_heading("ACME Corporation — Employment Verification", level=1)
+doc.add_heading("ACME Corporation - Employment Verification", level=1)
 for line in TXT_BODY.splitlines():
     doc.add_paragraph(line)
 doc.add_heading("Table of recent contacts", level=2)
@@ -41,17 +36,16 @@ table.rows[1].cells[0].text = "Bob Sample"
 table.rows[1].cells[1].text = "bob.sample@example.com"
 doc.save(str(OUT / "sample_letter.docx"))
 
-# ---- Same letter as PDF ----------------------------------------------
+# PDF — manual line wrapping (PyMuPDF 1.24.2 has no wrap_text param)
 pdf = fitz.open()
 page = pdf.new_page()
-page.insert_text(
-    (72, 72),
-    TXT_BODY,
-    fontsize=11,
-    fontname="helv",
-    wrap_text=True,
-)
+y = 72
+for line in TXT_BODY.splitlines():
+    page.insert_text((72, y), line, fontsize=11, fontname="helv")
+    y += 14
 pdf.save(str(OUT / "sample_letter.pdf"))
 pdf.close()
 
-print(f"Wrote test files to {OUT}")
+print(f"Wrote 3 files to: {OUT}")
+for f in sorted(OUT.glob("sample_letter.*")):
+    print(f"  - {f.name} ({f.stat().st_size} bytes)")
