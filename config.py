@@ -52,3 +52,6 @@ SPACY_ENTITIES = {
     "GPE":    "ADDRESS",
     "LOC":    "ADDRESS",
 }
+# ---- Document processing ---------------------------------------------
+SUPPORTED_EXTENSIONS = {".pdf", ".docx", ".txt"}
+MAX_FILE_SIZE_MB = 25          # reject files larger than this
