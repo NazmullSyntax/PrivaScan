@@ -1,0 +1,23 @@
+[
+  {
+    "id": "doc_1",
+    "text": "Hello, my name is Alice Testerson and my email is alice@test.com.",
+    "expected_pii": [
+      {"category": "PERSON", "text": "Alice Testerson"},
+      {"category": "EMAIL", "text": "alice@test.com"}
+    ]
+  },
+  {
+    "id": "doc_2",
+    "text": "Call me at 555-019-2837. My SSN is 123-45-6789.",
+    "expected_pii": [
+      {"category": "PHONE", "text": "555-019-2837"},
+      {"category": "NATIONAL_ID", "text": "123-45-6789"}
+    ]
+  },
+  {
+    "id": "doc_3",
+    "text": "This is a safe document with no personal data at all.",
+    "expected_pii": []
+  }
+]
