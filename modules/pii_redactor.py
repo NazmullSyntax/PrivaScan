@@ -61,3 +61,50 @@ def redact_document(text: str, matches: List[PIIMatch], strategy: str = "redact"
         )
 
     return redacted_text
+import fitz  # PyMuPDF
+
+def generate_redacted_pdf(redacted_text: str, output_path: str) -> None:
+    """
+    Generates a clean, safe PDF from the redacted text.
+    
+    Note: This creates a NEW plain-text PDF. It does not preserve 
+    the original layout/images. This is a documented MVP limitation.
+    """
+    pdf = fitz.open()
+    page = pdf.new_page()
+    
+    # Insert text with basic wrapping
+    y_position = 72  # Start 1 inch from top
+    margin_left = 72
+    line_height = 14
+    max_width = 450  # Max chars per line before wrapping
+    
+    for line in redacted_text.splitlines():
+        # Very basic wrapping for long lines
+        while len(line) > max_width:
+            # Find the last space before max_width
+            break_point = line.rfind(' ', 0, max_width)
+            if break_point == -1:
+                break_point = max_width  # Force break if no space found
+            
+            chunk = line[:break_point]
+            page.insert_text((margin_left, y_position), chunk, fontsize=11)
+            line = line[break_point:].lstrip()
+            y_position += line_height
+            
+            # Add a new page if we run out of room
+            if y_position > 750:
+                page = pdf.new_page()
+                y_position = 72
+
+        # Write the remaining part of the line
+        page.insert_text((margin_left, y_position), line, fontsize=11)
+        y_position += line_height
+        
+        # Add a new page if we run out of room
+        if y_position > 750:
+            page = pdf.new_page()
+            y_position = 72
+
+    pdf.save(output_path)
+    pdf.close()
