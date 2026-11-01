@@ -95,3 +95,6 @@ st.markdown(
     f"<div style='background:#f0f2f6; padding:15px; border-radius:5px; line-height:1.6;'>{highlighted_text}</div>", 
     unsafe_allow_html=True
 )
+# Add a back button at the top
+if st.button("⬅️ Back to Home"):
+    st.switch_page("0_🏠_Home.py")

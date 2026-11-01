@@ -57,3 +57,19 @@ st.markdown(
 
 st.divider()
 st.caption(f"Project folder: `{config.BASE_DIR}`")
+# ---- Quick orientation ----------------------------------------------
+st.subheader("Getting started")
+st.markdown("Use the buttons below or the sidebar to navigate:")
+
+col1, col2, col3 = st.columns(3)
+with col1:
+    if st.button("📄 Upload a Document"):
+        st.switch_page("pages/1_📄_Document_Upload.py")
+with col2:
+    if st.button("🔍 Review PII"):
+        st.switch_page("pages/2_🔍_PII_Detection.py")
+with col3:
+    if st.button("🛡️ Redact a Document"):
+        st.switch_page("pages/3_🛡️_PII_Redaction.py")
+
+st.divider()

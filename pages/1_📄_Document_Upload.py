@@ -96,3 +96,6 @@ st.caption(
     f"Original filename: `{doc.filename}` · "
     f"sha256: `{doc.file_hash[:16]}…`"
 )
+# Add a back button at the top
+if st.button("⬅️ Back to Home"):
+    st.switch_page("0_🏠_Home.py")

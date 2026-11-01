@@ -85,3 +85,6 @@ if st.button("Generate & Save Redacted File"):
     
     st.success(f"✅ Redacted file saved to: `reports/{output_filename}`")
     st.balloons()
+    # Add a back button at the top
+if st.button("⬅️ Back to Home"):
+    st.switch_page("0_🏠_Home.py")
