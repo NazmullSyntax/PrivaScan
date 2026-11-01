@@ -22,17 +22,21 @@ for _folder in (DATA_DIR, SAMPLE_DOCS, SAMPLE_DATASETS, UPLOAD_DIR, REPORTS_DIR)
 # ---- NLP model --------------------------------------------------------
 SPACY_MODEL = "en_core_web_sm"
 
-# ---- PII regex patterns ----------------------------------------------
-# IMPORTANT: These are SAMPLE patterns for synthetic test data only.
-# Real-world national ID / passport formats differ per country.
-# We document this limitation in README.md.
-PII_PATTERNS = {
-    "EMAIL":        r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b",
-    "PHONE":        r"\b(?:\+?\d{1,3}[-.\s]?)?(?:\(?\d{2,4}\)?[-.\s]?)?\d{3,4}[-.\s]?\d{3,4}\b",
-    "NATIONAL_ID":  r"\b\d{3}-\d{2}-\d{4}\b",          # sample SSN-like format
-    "PASSPORT":     r"\b[A-Z]{1,2}\d{6,8}\b",           # sample format
-    "BANK_ACCOUNT": r"\b\d{10,17}\b",                    # broad on purpose; refined Day 3
-    "ADDRESS_HINT": r"\b\d{1,5}\s+[A-Za-z0-9.\s]{3,40}(?:Street|St|Road|Rd|Ave|Avenue|Blvd|Lane|Ln)\b",
+# ---- PII Detection Configuration -------------------------------------
+
+# Confidence scores (0.0 to 1.0) used to resolve overlapping matches
+CONFIDENCE_REGEX = 0.95    # High, because rules are precise
+CONFIDENCE_NER = 0.85      # Slightly lower, because AI can be wrong
+
+# Tokens used later for redaction (Day 4)
+REDACTION_TOKENS = {
+    "EMAIL": "[EMAIL]",
+    "PHONE": "[PHONE]",
+    "NATIONAL_ID": "[SSN]",
+    "PASSPORT": "[PASSPORT]",
+    "BANK_ACCOUNT": "[BANK_ACCOUNT]",
+    "PERSON": "[PERSON]",
+    "ADDRESS": "[ADDRESS]",
 }
 
 # ---- Redaction replacement tokens ------------------------------------
