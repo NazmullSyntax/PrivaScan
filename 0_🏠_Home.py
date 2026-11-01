@@ -1,31 +1,28 @@
 """
-Home page — the entry point for the Streamlit dashboard.
+Home page — the main dashboard.
 
-Run with:  streamlit run app.py
+Run with:  streamlit run 0_🏠_Home.py
 """
 import streamlit as st
 
 import config
 from database import db_manager
 
-# Must be the FIRST streamlit call on the page.
 st.set_page_config(
-    page_title="PII Management System",
+    page_title="PrivaScan — Home",
     page_icon="🔒",
     layout="wide",
 )
-
-# Ensure tables exist. Safe to run every time.
 db_manager.init_db()
 
 # ---- Header ----------------------------------------------------------
-st.title("🔒 PII Detection, Document Review & Data Quality")
+st.title("🔒 PrivaScan")
 st.caption(
-    "Privacy · Document Review · Data Analysis · Quality Assurance — "
+    "PII Detection · Document Review · Data Analysis · Quality Assurance — "
     "all statistics shown are computed live from the database."
 )
 
-# ---- KPI cards -------------------------------------------------------
+# ---- Top KPI row -----------------------------------------------------
 counts = db_manager.dashboard_counts()
 
 c1, c2, c3, c4 = st.columns(4)
@@ -35,41 +32,45 @@ c3.metric("🛡️ Documents redacted", counts["redactions"])
 c4.metric("✅ QA runs", counts["qa_runs"])
 
 # ---- PII breakdown chart --------------------------------------------
-st.subheader("PII findings by category")
+st.subheader("📊 PII Findings by Category")
 pii_totals = db_manager.get_pii_totals()
-if pii_totals:
-    st.bar_chart(pii_totals)
-else:
-    st.info("No PII has been detected yet. Upload a document to get started.")
 
-# ---- Quick orientation ----------------------------------------------
-st.subheader("Getting started")
-st.markdown(
-    """
-1. Go to **Document Upload** to add a PDF, DOCX, or TXT file.
-2. Visit **PII Detection** to see what sensitive data was found.
-3. Use **PII Redaction** to produce a safe-to-share copy.
-4. Open **Data Analysis** for CSV/Excel insights.
-5. Run **Quality Assurance** to validate detection on labelled data.
-6. Review **Audit Logs** to see every action the system took.
-"""
-)
+if pii_totals:
+    # Sort largest to smallest
+    sorted_pii = dict(sorted(pii_totals.items(), key=lambda x: x[1], reverse=True))
+    st.bar_chart(sorted_pii, height=300)
+else:
+    st.info("No PII has been detected yet. Upload a document on the **Document Upload** page to get started.")
+
+# ---- Recent activity -------------------------------------------------
+st.subheader("🕐 Recent Activity")
+recent_logs = db_manager.get_audit_logs(limit=5)
+
+if recent_logs:
+    for log in recent_logs:
+        action = log["action"].replace("_", " ").title()
+        timestamp = log["timestamp"][:19].replace("T", " ")
+        st.markdown(f"- **{action}** — `{timestamp}`")
+else:
+    st.info("No activity yet. Your actions will appear here.")
+
+# ---- Navigation tiles -----------------------------------------------
+st.divider()
+st.subheader("🚀 Quick Actions")
+
+col1, col2, col3, col4 = st.columns(4)
+with col1:
+    if st.button("📄 Upload Document", use_container_width=True):
+        st.switch_page("pages/1_📄_Document_Upload.py")
+with col2:
+    if st.button("🔍 Review PII", use_container_width=True):
+        st.switch_page("pages/2_🔍_PII_Detection.py")
+with col3:
+    if st.button("🛡️ Redact", use_container_width=True):
+        st.switch_page("pages/3_🛡️_PII_Redaction.py")
+with col4:
+    if st.button("✅ Run QA", use_container_width=True):
+        st.switch_page("pages/6_✅_Quality_Assurance.py")
 
 st.divider()
 st.caption(f"Project folder: `{config.BASE_DIR}`")
-# ---- Quick orientation ----------------------------------------------
-st.subheader("Getting started")
-st.markdown("Use the buttons below or the sidebar to navigate:")
-
-col1, col2, col3 = st.columns(3)
-with col1:
-    if st.button("📄 Upload a Document"):
-        st.switch_page("pages/1_📄_Document_Upload.py")
-with col2:
-    if st.button("🔍 Review PII"):
-        st.switch_page("pages/2_🔍_PII_Detection.py")
-with col3:
-    if st.button("🛡️ Redact a Document"):
-        st.switch_page("pages/3_🛡️_PII_Redaction.py")
-
-st.divider()
