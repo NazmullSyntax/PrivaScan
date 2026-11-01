@@ -59,9 +59,9 @@ def analyze_dataset(df: pd.DataFrame) -> dict:
     email_pattern = re.compile(config.PII_PATTERNS["EMAIL"])
     phone_pattern = re.compile(config.PII_PATTERNS["PHONE"])
     
-    for col in df.select_dtypes(include=['object']).columns:
+    for col in df.select_dtypes(include=['object', 'string']).columns:
         for cell in df[col].dropna():
-            cell_str = str(cell)
+            cell_str = str(cell) if cell is not None else ""
             if email_pattern.search(cell_str):
                 pii_counts["EMAIL"] += 1
             if phone_pattern.search(cell_str):

@@ -28,5 +28,6 @@ def test_analyze_messy_data():
     assert results["missing_total"] == 1
     # 1 duplicate row (Alice)
     assert results["duplicate_rows"] == 1
-    # 2 emails found
-    assert results["pii_found"]["EMAIL"] == 2
+    
+    # 3 emails found (alice appears twice, bob once)
+    assert results["pii_found"]["EMAIL"] == 3
