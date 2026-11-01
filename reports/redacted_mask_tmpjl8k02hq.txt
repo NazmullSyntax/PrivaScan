@@ -1,0 +1,10 @@
+ACME Corporation - Employment Verification
+Employee: A*************n
+Email: a***@e***.com
+Phone: +1************0
+SSN (sample format): 1*********9
+Passport (sample format): A*******7
+Bank account: 1***********3
+Address: 7******************e
+Alice has been with the company since 2020 and works as a Data Analyst.
+This is synthetic data used only for testing.
