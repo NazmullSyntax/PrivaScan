@@ -54,3 +54,7 @@ REDACTION_TOKENS = {
     "PERSON": "[PERSON]",
     "ADDRESS": "[ADDRESS]",
 }
+
+# ---- Redaction Configuration -----------------------------------------
+# Strategy: "redact" (replace entirely) or "mask" (keep first/last char)
+DEFAULT_REDACTION_STRATEGY = "redact"
